@@ -1,17 +1,24 @@
-# this sets up the container with python 3.10
+# Use a lightweight Python 3.10 image
 FROM python:3.10-slim
 
-# this copies everything in the Dockerfile directory to /app directory in tyhe container
-COPY . /app
+# Set environment variables to prevent Python from writing .pyc files and to enable unbuffered output
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# change working dir
+# Create and set the working directory
 WORKDIR /app
 
-# installing the dependencies
-RUN pip install -r requirements.txt
+# Copy only requirements first for better caching
+COPY requirements.txt .
 
-# exposing port 80
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose port 80 for the application
 EXPOSE 80
 
-# command to run
+# Command to run the application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

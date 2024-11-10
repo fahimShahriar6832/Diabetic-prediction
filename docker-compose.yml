@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: diabetes_prediction_app
+    ports:
+      - "80:80"
+    # Removed network_mode for standard Docker networking (optional, remove if needed)
+    # network_mode: "host" 
+    
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    
+    volumes:
+      - .:/app  # Optional: You may want to remove this in production
+    environment:
+      - MODEL_PATH=/app/trained_model/diabetes_model.pkl  # Ensure the path is correct inside the container
+
+    # Optional: Restart container automatically on failure or when Docker restarts
+    restart: always
+
+    # Optional: Command to run application (if needed for clarity)
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
