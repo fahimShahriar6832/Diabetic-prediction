@@ -1,5 +1,5 @@
 # Use a lightweight Python 3.10 image
-FROM python:3.10-slim
+FROM python:3.10-slim-buster
 
 # Set environment variables to prevent Python from writing .pyc files and to enable unbuffered output
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose port 80 for the application
-EXPOSE 80
+EXPOSE 8080
 
 # Command to run the application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
